@@ -37,8 +37,6 @@ def main():
             if line[i].isdigit():
                 numbersInLine.append(dict(pos=i, val=line[i]))
 
-        print(numbersInLine)
-
         lowestPos = numbersInLine[0].get('pos')
         lowestDigit = numbersInLine[0].get('val')
         highestPos = numbersInLine[0].get('pos')
@@ -55,8 +53,6 @@ def main():
         formatter = "{}{}"
 
         val = formatter.format(lowestDigit, highestDigit)
-
-        print(val)
 
         sum = sum + int(val)
 
