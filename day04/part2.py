@@ -14,7 +14,7 @@ def main():
         cardSplit = card.split(":")
 
         cardNo = int(cardSplit[0].split()[1])
-        print("cardNo ", cardNo)
+        #print("cardNo ", cardNo)
         card = cardSplit[1].split("|")
 
         # no param on split takes all whitespace out
@@ -28,13 +28,15 @@ def main():
                 if myNo == winningNo:
                     matchesScore += 1
 
-        print("won ", matchesScore, " more cards")
+        #print("won ", matchesScore, " more cards")
         while matchesScore > 0:
             if not (matchesScore + cardNo) > len(cardList)-1:
                 cards.append(cardList[matchesScore + cardNo-1])
             matchesScore -= 1
 
     print(len(cards))
+    if len(cards) == 8172507:
+        print("PASSED!")
 
 
 if __name__ == '__main__':
