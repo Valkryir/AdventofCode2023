@@ -5,7 +5,6 @@ def main():
         'A',
         'K',
         'Q',
-        'J',
         'T',
         '9',
         '8',
@@ -14,7 +13,8 @@ def main():
         '5',
         '4',
         '3',
-        '2'
+        '2',
+        'J'
     ]
 
     tokenStrength = tokens.copy()
@@ -33,67 +33,101 @@ def main():
 
     for hi in range(len(hands)):
         for token in tokens:
-            c = hands[hi][0].count(token)
-            if c == 5:
-                print("it's five of a kind")
-                handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
-                break
-            if c == 4:
-                print("it's four of a kind")
-                handTypes[5].append([hi, hands[hi][0], hands[hi][1]])
-                break
-            if c == 3:
-                # check for full house
-                isFullHouse = False
-                for t2 in tokens:
-                    if t2 != token:
-                        c2 = hands[hi][0].count(t2)
-                        if c2 == 2:
-                            print("it's full house")
-                            handTypes[4].append([hi, hands[hi][0], hands[hi][1]])
-                            isFullHouse = True
-                            break
-
-                if isFullHouse:
+            if token != "J":
+                c = hands[hi][0].count(token)
+                if c == 5:
+                    print("it's five of a kind", hands[hi][0])
+                    handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
                     break
+                if c == 4:
+                    if hands[hi][0].count("J") == 1:
+                        print("it's five of a kind", hands[hi][0])
+                        handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    else:
+                        print("it's four of a kind", hands[hi][0])
+                        handTypes[5].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                if c == 3:
+                    # check for full house
+                    isFullHouse = identifyFullHouse(tokens, token, hands, hi, 2)
 
-                print("it's three of a kind")
-                handTypes[3].append([hi, hands[hi][0], hands[hi][1]])
-                break
+                    if hands[hi][0].count("J") == 2:
+                        print("it's five of a kind", hands[hi][0])
+                        handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    elif hands[hi][0].count("J") == 1:
+                        print("it's four of a kind", hands[hi][0])
+                        handTypes[5].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    elif isFullHouse:
+                        print("it's full house", hands[hi][0])
+                        handTypes[4].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    else:
+                        print("it's three of a kind", hands[hi][0])
+                        handTypes[3].append([hi, hands[hi][0], hands[hi][1]])
+                        break
 
-            if c == 2:
-                # check for full house
-                isFullHouse = False
-                for t2 in tokens:
-                    if t2 != token:
-                        c2 = hands[hi][0].count(t2)
-                        if c2 == 3:
-                            print("it's full house")
-                            handTypes[4].append([hi, hands[hi][0], hands[hi][1]])
-                            isFullHouse = True
-                            break
+                if c == 2:
+                    # check for full house
+                    isFullHouse = identifyFullHouse(tokens, token, hands, hi, 3)
 
-                if isFullHouse:
+                    isTwoPair = False
+                    for t2 in tokens:
+                        if t2 != token:
+                            c2 = hands[hi][0].count(t2)
+                            if c2 == 2:
+                                isTwoPair = True
+                                break
+
+                    if hands[hi][0].count("J") == 3:
+                        print("it's five of a kind", hands[hi][0])
+                        handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    elif hands[hi][0].count("J") == 2:
+                        print("it's four of a kind", hands[hi][0])
+                        handTypes[5].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    elif isFullHouse:
+                        print("it's full house", hands[hi][0])
+                        handTypes[4].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    elif hands[hi][0].count("J") == 1:
+                        print("it's three of a kind", hands[hi][0])
+                        handTypes[3].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    elif isTwoPair:
+                        print("it's a two pair", hands[hi][0])
+                        handTypes[2].append([hi, hands[hi][0], hands[hi][1]])
+                        break
+                    else:
+                        print("it's a one pair", hands[hi][0])
+                        handTypes[1].append([hi, hands[hi][0], hands[hi][1]])
                     break
-
-                isTwoPair = False
-                for t2 in tokens:
-                    if t2 != token:
-                        c2 = hands[hi][0].count(t2)
-                        if c2 == 2:
-                            print("it's a two pair")
-                            handTypes[2].append([hi, hands[hi][0], hands[hi][1]])
-                            isTwoPair = True
-                            break
-                if isTwoPair:
+            elif token == "J":
+                c = hands[hi][0].count(token)
+                if c == 5:
+                    print("it's five of a kind", hands[hi][0])
+                    handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
                     break
-
-                print("it's a one pair")
-                handTypes[1].append([hi, hands[hi][0], hands[hi][1]])
-                break
+                if c == 4:
+                    print("it's five of a kind", hands[hi][0])
+                    handTypes[6].append([hi, hands[hi][0], hands[hi][1]])
+                    break
         else:
-            print("its a high card (all distinct)")
-            handTypes[0].append([hi, hands[hi][0], hands[hi][1]])
+            if hands[hi][0].count("J") == 1:
+                print("it's one pair", hands[hi][0])
+                handTypes[1].append([hi, hands[hi][0], hands[hi][1]])
+            elif hands[hi][0].count("J") == 2:
+                print("it's three of a kind", hands[hi][0])
+                handTypes[3].append([hi, hands[hi][0], hands[hi][1]])
+            elif hands[hi][0].count("J") == 3:
+                print("it's four of a kind", hands[hi][0])
+                handTypes[5].append([hi, hands[hi][0], hands[hi][1]])
+            else:
+                print("its a high card (all distinct)", hands[hi][0])
+                handTypes[0].append([hi, hands[hi][0], hands[hi][1]])
 
     print("")
     for h in handTypes:
@@ -112,18 +146,16 @@ def main():
                 ranking.append([handType[0][1], nextRank * handType[0][2]])
                 nextRank += 1
             else:
-                print("before:", handType)
                 handType = sortHandsByStrength(handType, tokenStrength)
-                print("after:", handType)
                 for hand in handType:
                     ranking.append([hand[1], nextRank * hand[2]])
                     nextRank += 1
 
-    print("sorted:")
-    i = 1
-    for h in ranking:
-        print("r:", i, "-", h)
-        i += 1
+    # print("sorted:")
+    # i = 1
+    # for h in ranking:
+    #     print("r:", i, "-", h)
+    #     i += 1
     print("")
     # 765 * 1
     # 220 * 2
@@ -136,12 +168,11 @@ def main():
         finalSum += r[1]
 
     print("f:", finalSum)
-    # not 250001735 - too high
-    # not 249601596 - too high
-    # not 248808690
-    # not 248877501
-    # not 248431822
-    # 249204891
+    # not 250246117, too high
+    # not 250321821, too high
+    # not 250510144, too high
+    # not 250042040, too high
+    # 249666369
 
 
 def sortHandsByStrength(handsToSort, tokenStrength):
@@ -176,7 +207,16 @@ def isHandAStrongerThanHandB(handA, handB, tokenStrength):
     print(isHandAStronger)
     return isHandAStronger
 
-#Q9272 v K4432
+
+def identifyFullHouse(tokens, token, hands, hi, qty):
+    for t2 in tokens:
+        if t2 != token:
+            c2 = hands[hi][0].count(t2)
+            j2 = hands[hi][0].count("J")
+            if c2 + j2 == qty:
+                return True
+
+    return False
 
 
 if __name__ == '__main__':
@@ -202,12 +242,12 @@ if __name__ == '__main__':
     # tokenStrength.reverse()
     #
     # handA = [
-    #     [0, "Q9272"],
+    #     [0, "JKKK2"],
     #     []
     # ]
     #
     # handB = [
-    #     [0, "K4432"],
+    #     [0, "QQQQ2"],
     #     []
     # ]
     #
